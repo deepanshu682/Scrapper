@@ -374,14 +374,53 @@ function setupEventListeners() {
 
   // Export Buttons
   document.getElementById('exportCsvBtn').addEventListener('click', () => {
-    const run = currentRunId || 'latest';
-    window.open(`/api/export/${run}?format=csv`, '_blank');
+    exportData('csv');
   });
 
   document.getElementById('exportJsonBtn').addEventListener('click', () => {
-    const run = currentRunId || 'latest';
-    window.open(`/api/export/${run}?format=json`, '_blank');
+    exportData('json');
   });
+}
+
+function exportData(format) {
+  if (currentJobs && currentJobs.length > 0) {
+    const runId = currentRunId || `export-${Date.now()}`;
+    if (format === 'csv') {
+      const headers = ['ID', 'Title', 'Company', 'Location', 'Salary', 'URL', 'Source', 'Tier'];
+      const rows = currentJobs.map(j => [
+        `"${String(j.id || '').replace(/"/g, '""')}"`,
+        `"${String(j.title || '').replace(/"/g, '""')}"`,
+        `"${String(j.company || '').replace(/"/g, '""')}"`,
+        `"${String(j.location || '').replace(/"/g, '""')}"`,
+        `"${String(j.salary || '').replace(/"/g, '""')}"`,
+        `"${String(j.url || '').replace(/"/g, '""')}"`,
+        `"${String(j.source || '').replace(/"/g, '""')}"`,
+        `"${String(j.tier || '').replace(/"/g, '""')}"`
+      ]);
+      const csvContent = [headers.join(','), ...rows.map(r => r.join(','))].join('\r\n');
+      downloadFile(csvContent, `jobs-${runId}.csv`, 'text/csv;charset=utf-8;');
+    } else {
+      const jsonContent = JSON.stringify(currentJobs, null, 2);
+      downloadFile(jsonContent, `jobs-${runId}.json`, 'application/json;charset=utf-8;');
+    }
+    return;
+  }
+
+  // If client buffer is empty, attempt backend export fallback
+  const run = currentRunId || 'latest';
+  window.open(`/api/export/${run}?format=${format}`, '_blank');
+}
+
+function downloadFile(content, filename, mimeType) {
+  const blob = new Blob([content], { type: mimeType });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 
 function escapeHtml(str) {

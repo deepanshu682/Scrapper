@@ -132,15 +132,19 @@ async def get_history():
 @app.get("/api/export/{run_id}")
 async def export_data(run_id: str, format: str = Query("json")):
     """Export extracted job listings as CSV or JSON"""
-    record = next((h for h in orchestrator.history if h.get("runId") == run_id), None)
-    if not record and orchestrator.history:
-        record = orchestrator.history[0]
+    record = None
+    if run_id and run_id != "latest":
+        record = next((h for h in orchestrator.history if h.get("runId") == run_id), None)
 
-    if not record or not record.get("jobs"):
-        raise HTTPException(status_code=404, detail="No job records found for this run")
+    # If specific run not found or "latest" requested, pick latest run with jobs
+    if not record:
+        record = next((h for h in orchestrator.history if h.get("jobs")), None)
+        if not record and orchestrator.history:
+            record = orchestrator.history[0]
 
-    jobs = record["jobs"]
-    source_id = record.get("sourceId", "scrape")
+    jobs = record.get("jobs", []) if record else []
+    source_id = record.get("sourceId", "listings") if record else "empty"
+    safe_run_id = run_id if (run_id and run_id != "latest") else (record.get("runId", "latest") if record else "latest")
 
     if format.lower() == "csv":
         output = io.StringIO()
@@ -163,13 +167,13 @@ async def export_data(run_id: str, format: str = Query("json")):
         return Response(
             content=csv_content,
             media_type="text/csv",
-            headers={"Content-Disposition": f'attachment; filename="jobs-{source_id}-{run_id}.csv"'},
+            headers={"Content-Disposition": f'attachment; filename="jobs-{source_id}-{safe_run_id}.csv"'},
         )
 
     return Response(
         content=json.dumps(jobs, indent=2),
         media_type="application/json",
-        headers={"Content-Disposition": f'attachment; filename="jobs-{source_id}-{run_id}.json"'},
+        headers={"Content-Disposition": f'attachment; filename="jobs-{source_id}-{safe_run_id}.json"'},
     )
 
 
