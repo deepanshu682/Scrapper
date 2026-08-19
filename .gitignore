@@ -16,3 +16,5 @@ node_modules/
 .DS_Store
 .idea/
 .vscode/
+.agents/
+skills-lock.json
