@@ -2,7 +2,7 @@
 
 ## Aegis: Stealth & Resilient Job Ingestion Pipeline (Python Engine)
 
-This document details the engineering decisions, detection surface mitigations, ingestion strategies, schema drift resilience, and ethical boundaries for the **Acdyon Technologies Engineering Frontend Challenge (Part 1)** implemented in Python.
+This document details the engineering decisions, detection surface mitigations, ingestion strategies, schema drift resilience, and ethical boundaries. 
 
 ---
 
