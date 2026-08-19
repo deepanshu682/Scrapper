@@ -12,44 +12,43 @@
   <link
     href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@500;600;700&display=swap"
     rel="stylesheet">
-  <link rel="stylesheet" href="/app.css">
+  <li <header clasnk rel="stylesheet" href="/app.css">
 </head>
 
 <body>
   <div class="app-layout">
-    <!-- Top Header -->
-    <header class="top-nav">
-      <div class="brand-group">
-        <div class="brand-logo">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
-          </svg>
-        </div>
-        <div class="brand-info">
-          <span class="brand-title">AEGIS ENGINE</span>
-          <span class="brand-badge">Resilient Ingestion</span>
-        </div>
+    <!--- Top Header --->s="top-nav">
+    <div class="brand-group">
+      <div class="brand-logo">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+        </svg>
       </div>
+      <div class="brand-info">
+        <span class="brand-title">AEGIS ENGINE</span>
+        <span class="brand-badge">Resilient Ingestion</span>
+      </div>
+    </div>
 
-      <div class="header-status-pills">
-        <div class="status-pill live-pill" id="sseStatusPill">
-          <span class="pulse-dot"></span>
-          <span id="sseStatusText">Telemetry Live</span>
-        </div>
-        <div class="status-pill proxy-pill">
-          <span class="pill-label">Proxy Pool:</span>
-          <span class="pill-val" id="headerProxyHealth">4/4 Healthy</span>
-        </div>
-        <div class="status-pill circuit-pill">
-          <span class="pill-label">Circuit:</span>
-          <span class="pill-val status-closed" id="headerCircuitStatus">CLOSED (100%)</span>
-        </div>
+    <div class="header-status-pills">
+      <div class="status-pill live-pill" id="sseStatusPill">
+        <span class="pulse-dot"></span>
+        <span id="sseStatusText">Telemetry Live</span>
       </div>
+      <div class="status-pill proxy-pill">
+        <span class="pill-label">Proxy Pool:</span>
+        <span class="pill-val" id="headerProxyHealth">4/4 Healthy</span>
+      </div>
+      <div class="status-pill circuit-pill">
+        <span class="pill-label">Circuit:</span>
+        <span class="pill-val status-closed" id="headerCircuitStatus">CLOSED (100%)</span>
+      </div>
+    </div>
     </header>
 
     <!-- Main Workspace -->
     <main class="main-content">
-      <!-- Metric Highlights Cards -->
+
       <section class="metrics-grid">
         <div class="metric-card">
           <div class="metric-header">
