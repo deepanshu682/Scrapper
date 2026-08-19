@@ -1,0 +1,18 @@
+# Python cache and environments
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.venv/
+venv/
+env/
+
+# Dependencies and logs
+node_modules/
+*.log
+.env
+.env.local
+.DS_Store
+.idea/
+.vscode/

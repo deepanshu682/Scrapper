@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aegis | Stealth & Resilient Ingestion Engine</title>
+  <meta name="description"
+    content="Production-grade, anti-detection resilient web scraper and ingestion pipeline with real-time telemetry and schema-drift recovery.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@500;600;700&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="/app.css">
+</head>
+
+<body>
+  <div class="app-layout">
+    <!-- Top Header -->
+    <header class="top-nav">
+      <div class="brand-group">
+        <div class="brand-logo">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+          </svg>
+        </div>
+        <div class="brand-info">
+          <span class="brand-title">AEGIS ENGINE</span>
+          <span class="brand-badge">v1.4 Resilient Ingestion</span>
+        </div>
+      </div>
+
+      <div class="header-status-pills">
+        <div class="status-pill live-pill" id="sseStatusPill">
+          <span class="pulse-dot"></span>
+          <span id="sseStatusText">Telemetry Live</span>
+        </div>
+        <div class="status-pill proxy-pill">
+          <span class="pill-label">Proxy Pool:</span>
+          <span class="pill-val" id="headerProxyHealth">4/4 Healthy</span>
+        </div>
+        <div class="status-pill circuit-pill">
+          <span class="pill-label">Circuit:</span>
+          <span class="pill-val status-closed" id="headerCircuitStatus">CLOSED (100%)</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Workspace -->
+    <main class="main-content">
+      <!-- Metric Highlights Cards -->
+      <section class="metrics-grid">
+        <div class="metric-card">
+          <div class="metric-header">
+            <span class="metric-title">TOTAL EXTRACTIONS</span>
+            <span class="metric-icon">📦</span>
+          </div>
+          <div class="metric-value" id="statTotalJobs">0</div>
+          <div class="metric-subtext">Across real & sandbox feeds</div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-header">
+            <span class="metric-title">CHALLENGES HANDLED</span>
+            <span class="metric-icon">🛡️</span>
+          </div>
+          <div class="metric-value text-emerald" id="statEvaded">0</div>
+          <div class="metric-subtext">Rate-limit backoff & graceful quarantine: 100%</div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-header">
+            <span class="metric-title">SCHEMA DRIFT RECOVERIES</span>
+            <span class="metric-icon">🔄</span>
+          </div>
+          <div class="metric-value text-indigo" id="statRecoveries">0</div>
+          <div class="metric-subtext">Fell back to JSON-LD / Heuristic</div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-header">
+            <span class="metric-title">CIRCUIT BREAKER STATE</span>
+            <span class="metric-icon">⚡</span>
+          </div>
+          <div class="metric-value text-amber" id="statCircuitState">CLOSED</div>
+          <div class="metric-subtext">Zero unhandled crash trips</div>
+        </div>
+      </section>
+
+      <!-- Control & Ingestion Dashboard -->
+      <div class="dashboard-grid">
+        <!-- Left: Control Panel & Target Selector -->
+        <div class="card control-card">
+          <div class="card-header">
+            <div class="card-title-group">
+              <h2 class="card-title">Ingestion Runner & Anti-Detection Controls</h2>
+              <p class="card-description">Trigger live low-risk sources or test anti-bot challenge evasions.</p>
+            </div>
+          </div>
+
+          <form id="scrapeForm" class="control-form">
+            <div class="form-group">
+              <label class="form-label" for="sourceSelect">Select Target Ingestion Vector</label>
+              <select id="sourceSelect" class="form-select">
+                <optgroup label="Real-World Live Sources (Safe Low-Risk)">
+                  <option value="jobicy" selected>Jobicy (Live Engineering Postings)</option>
+                  <option value="linkedin">LinkedIn (Public Guest Mode — Zero Auth)</option>
+                  <option value="remoteok">RemoteOK (Live Remote Tech Jobs)</option>
+                  <option value="hackernews">Hacker News: Who is Hiring (Live YC Threads)</option>
+                </optgroup>
+                <optgroup label="Anti-Bot & Resilience Simulator (Sandbox)">
+                  <option value="simulator:schema_drift">Drift Attack: CSS Obfuscation -> JSON-LD Fallback</option>
+                  <option value="simulator:cloudflare_block">Challenge Attack: Cloudflare 403 -> Proxy/UA Morph</option>
+                  <option value="simulator:rate_limit_burst">429 Storm: Rate Limit -> Circuit Quarantine</option>
+                </optgroup>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="batchLimitSelect">Batch Ingestion Target (Volume Limit)</label>
+              <select id="batchLimitSelect" class="form-select">
+                <option value="15">15 Postings (Fastest — 1.2s)</option>
+                <option value="25" selected>25 Postings (Standard — 2.0s)</option>
+                <option value="50">50 Postings (Paced 2-Page — 3.5s)</option>
+                <option value="100">100 Postings (Full Depth 4-Page — 5.8s)</option>
+              </select>
+            </div>
+
+            <div class="stealth-toggle-row">
+              <div class="toggle-item">
+                <span class="toggle-label">Sec-CH-UA Morphing</span>
+                <span class="badge badge-success">ACTIVE</span>
+              </div>
+              <div class="toggle-item">
+                <span class="toggle-label">Jittered Token Bucket</span>
+                <span class="badge badge-success">0.8s - 2.5s JITTER</span>
+              </div>
+              <div class="toggle-item">
+                <span class="toggle-label">Residential IP Rotation</span>
+                <span class="badge badge-success">4 POOL IPS</span>
+              </div>
+            </div>
+
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary" id="runScraperBtn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                </svg>
+                Execute Stealth Ingestion
+              </button>
+            </div>
+          </form>
+
+          <!-- System Matrix Tabs -->
+          <div class="system-matrix">
+            <div class="matrix-header">
+              <span class="section-tag">RESILIENCE MATRIX</span>
+            </div>
+
+            <div class="matrix-grid">
+              <div class="matrix-box">
+                <div class="matrix-label">Current Jitter Window</div>
+                <div class="matrix-val text-cyan" id="matrixJitterVal">850ms ~ 2400ms</div>
+                <div class="progress-bar">
+                  <div class="progress-fill" style="width: 72%"></div>
+                </div>
+              </div>
+              <div class="matrix-box">
+                <div class="matrix-label">Token Bucket Budget</div>
+                <div class="matrix-val text-emerald" id="matrixTokenBudget">8 / 8 Available</div>
+                <div class="progress-bar">
+                  <div class="progress-fill" style="width: 100%"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="proxy-list-wrapper">
+              <div class="table-subtitle">Residential Proxy Pool Health</div>
+              <table class="mini-table">
+                <thead>
+                  <tr>
+                    <th>Node ID</th>
+                    <th>Region / Subnet</th>
+                    <th>Health</th>
+                    <th>Reqs</th>
+                  </tr>
+                </thead>
+                <tbody id="proxyTableBody">
+                  <tr>
+                    <td colspan="4" class="text-muted">Loading proxy mesh...</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Real-time Telemetry Stream Console -->
+        <div class="card terminal-card">
+          <div class="card-header">
+            <div class="card-title-group">
+              <div class="terminal-title-row">
+                <span class="terminal-dot red"></span>
+                <span class="terminal-dot yellow"></span>
+                <span class="terminal-dot green"></span>
+                <h2 class="card-title" style="margin-left: 8px;">Live Ingestion Telemetry Stream</h2>
+              </div>
+              <p class="card-description">Real-time SSE events: Headers, TLS handshakes, Backoff delays, Parsers.</p>
+            </div>
+            <div class="terminal-actions">
+              <button class="btn btn-ghost btn-xs" id="clearLogsBtn">Clear Logs</button>
+              <label class="autoscroll-label">
+                <input type="checkbox" id="autoScrollCheck" checked> Auto-scroll
+              </label>
+            </div>
+          </div>
+
+          <div class="terminal-body" id="terminalConsole">
+            <div class="terminal-line log-system">
+              <span class="log-time">[INIT]</span>
+              <span class="log-tag tag-sys">SYS</span>
+              <span class="log-msg">Aegis Ingestion Engine ready. Listening on event stream...</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom: Extracted Listings Table -->
+      <section class="card results-card">
+        <div class="card-header results-header">
+          <div class="card-title-group">
+            <h2 class="card-title">Extracted Job Postings</h2>
+            <p class="card-description" id="resultsCount">0 listings extracted in current session.</p>
+          </div>
+          <div class="results-actions">
+            <input type="text" id="jobSearchInput" class="form-input search-input"
+              placeholder="Filter by title, company, tag, location...">
+            <div class="export-dropdown">
+              <button class="btn btn-secondary btn-sm" id="exportCsvBtn">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                  <polyline points="7 10 12 15 17 10"></polyline>
+                  <line x1="12" y1="15" x2="12" y2="3"></line>
+                </svg>
+                Export CSV
+              </button>
+              <button class="btn btn-secondary btn-sm" id="exportJsonBtn">Export JSON</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="jobs-table">
+            <thead>
+              <tr>
+                <th>Job Title</th>
+                <th>Company</th>
+                <th>Location</th>
+                <th>Estimated Compensation</th>
+                <th>Extraction Tier</th>
+                <th>Source</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="jobsTableBody">
+              <tr>
+                <td colspan="7" class="empty-state">
+                  <div class="empty-content">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                      stroke-width="1.5">
+                      <circle cx="12" cy="12" r="10"></circle>
+                      <line x1="12" y1="8" x2="12" y2="12"></line>
+                      <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                    </svg>
+                    <p>No job postings ingested yet. Select a target above and click <strong>Execute Stealth
+                        Ingestion</strong>.</p>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="/app.js"></script>
+</body>
+
+</html>
