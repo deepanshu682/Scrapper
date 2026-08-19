@@ -2,7 +2,6 @@
 
 A production-grade, unauthenticated job ingestion pipeline built in Python to reliably extract job listings from platforms that actively defend against automated clients (such as LinkedIn, RemoteOK, and HackerNews) without getting IPs burned, crashing on markup changes, or violating ethical boundaries.
 
-Built as part of the **Acdyon Technologies Engineering Challenge (Part 1 — Ingestion Track)**.
  
 🌐 **Live Demo:** [https://aegis-scraper-engine.onrender.com/](https://aegis-scraper-engine.onrender.com/)
 
