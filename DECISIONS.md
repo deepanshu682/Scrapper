@@ -1,8 +1,7 @@
-# Written Explanation (DECISIONS.md)
+# Scrapper Tool
 
 **Track:** Part 1 — Getting Data Out of a Platform That Doesn't Want You To  
 **Stack:** Python (FastAPI, HTTPX, BeautifulSoup4)
-
 ---
 
 ### 1. Why this ingestion strategy over the obvious alternative rejected?
