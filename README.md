@@ -1,4 +1,4 @@
-# Aegis — Resilient Job Ingestion Engine
+# Aegis - Resilient Job Ingestion Engine
 
 A production-grade, unauthenticated job ingestion pipeline built in Python to reliably extract job listings from platforms that actively defend against automated clients (such as LinkedIn, RemoteOK, and HackerNews) without getting IPs burned, crashing on markup changes, or violating ethical boundaries.
 
